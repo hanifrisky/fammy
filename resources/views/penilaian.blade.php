@@ -1113,13 +1113,13 @@
         </div>
 
         <!-- ═══════════════ MODE TOGGLE ═══════════════ -->
-        <div class="mode-bar">
+        <!-- <div class="mode-bar">
             <span class="mode-label">Mode:</span>
             <div class="mode-btn-group">
                 <button class="mode-btn" id="btnDebug" onclick="setMode('debug')">🔍 Debug</button>
                 <button class="mode-btn" id="btnProduction" onclick="setMode('production')">🚀 Production</button>
             </div>
-        </div>
+        </div> -->
 
         <!-- ═══════════════ STEP INDICATOR ═══════════════ -->
         <div class="step-indicator" id="stepIndicator">
