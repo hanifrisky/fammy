@@ -64,7 +64,17 @@ class FammiApiService
                 'ref_id' => $this->refId,
             ]);
 
-            return $response->successful() ? $response->json() : [];
+            $result = $response->successful() ? $response->json() : [];
+
+            if (config('fammi.debug_mode')) {
+                Log::debug("FammiApi::getQuizPrograms", [
+                    'url'    => $url,
+                    'params' => ['ref_id' => $this->refId],
+                    'result' => $result,
+                ]);
+            }
+
+            return $result;
         } catch (\Exception $e) {
             Log::error("FammiApi::getQuizPrograms failed", [
                 'additionalContentId' => $additionalContentId,
@@ -82,8 +92,19 @@ class FammiApiService
     public function getQuizQuestions(string $quizId): array
     {
         try {
-            $response = Http::timeout(15)->get("{$this->baseUrl}/quiz/{$quizId}");
-            return $response->successful() ? $response->json() : [];
+            $url = "{$this->baseUrl}/quiz/{$quizId}";
+            $response = Http::timeout(15)->get($url);
+
+            $result = $response->successful() ? $response->json() : [];
+
+            if (config('fammi.debug_mode')) {
+                Log::debug("FammiApi::getQuizQuestions", [
+                    'url'    => $url,
+                    'result' => $result,
+                ]);
+            }
+
+            return $result;
         } catch (\Exception $e) {
             Log::error("FammiApi::getQuizQuestions failed for {$quizId}", [
                 'error' => $e->getMessage(),
@@ -125,7 +146,8 @@ class FammiApiService
     public function submitAnswer(string $quizId, array $answers): array
     {
         try {
-            $url = "{$this->baseUrl}/answer/{$quizId}/{$this->authToken1}/{$this->authToken2}?ref_id={$this->refId}";
+            $refId = (string) \Illuminate\Support\Str::uuid();
+            $url = "{$this->baseUrl}/answer/{$quizId}/{$this->authToken1}/{$this->authToken2}?ref_id={$refId}";
 
             $response = Http::timeout(30)->post($url, $answers);
 
@@ -133,6 +155,7 @@ class FammiApiService
                 'success' => $response->successful(),
                 'status'  => $response->status(),
                 'body'    => $response->json(),
+                'url'     => $url
             ];
         } catch (\Exception $e) {
             Log::error("FammiApi::submitAnswer failed for quiz {$quizId}", [
@@ -143,6 +166,7 @@ class FammiApiService
                 'success' => false,
                 'status'  => 0,
                 'body'    => ['error' => $e->getMessage()],
+                'url'     => $url ?? null
             ];
         }
     }

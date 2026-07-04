@@ -1253,6 +1253,51 @@
             background: rgba(245, 158, 11, 0.15);
             color: var(--amber-text);
         }
+
+        /* ═══════════════════════════════════════════════════════════
+           KOMENTAR STYLES
+           ═══════════════════════════════════════════════════════════ */
+        .catatan-card {
+            flex: 1;
+            min-width: 130px;
+            padding: 12px;
+            border: 2px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            background: rgba(255, 255, 255, 0.03);
+            user-select: none;
+            margin: 0;
+        }
+
+        .catatan-card:hover {
+            border-color: rgba(245, 158, 11, 0.4);
+            background: rgba(245, 158, 11, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .catatan-card.selected {
+            border-color: var(--amber-accent);
+            background: rgba(245, 158, 11, 0.15);
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.2);
+        }
+
+        .catatan-card .catatan-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            transition: var(--transition);
+        }
+
+        .catatan-card.selected .catatan-title {
+            color: var(--amber-text);
+        }
+
+        .komentar-textarea:focus {
+            border-color: var(--accent-solid) !important;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15) !important;
+        }
     </style>
 </head>
 
@@ -1260,16 +1305,16 @@
     <div class="app">
         <!-- ═══════════════ HEADER ═══════════════ -->
         <div class="header">
-            <h1>Penilaian Karakter Siswa</h1>
-            <p>Empati · Resilience · Inisiatif · 7 Kebiasaan Anak Indonesia Hebat</p>
+            <h1>Penilaian Bulanan</h1>
+            <p>Karakter Siswa</p>
         </div>
 
         <!-- ═══════════════ MODE TOGGLE ═══════════════ -->
         <div class="mode-bar">
             <span class="mode-label">Penilaian:</span>
             <div class="mode-btn-group">
-                <button class="mode-btn active-debug" id="btnDebug" onclick="">Karakter</button>
-                <button class="mode-btn" id="btnProduction" onclick="window.location.href = '/bulanan'">Bulanan</button>
+                <button class="mode-btn" id="btnDebug" onclick="window.location.href = '/'">Karakter</button>
+                <button class="mode-btn active-prod" id="btnProduction" onclick="">Bulanan</button>
             </div>
         </div>
 
@@ -1374,7 +1419,31 @@
                 <p class="subtitle">Pilih siswa untuk setiap kategori. Siswa yang sudah dipilih di satu kategori otomatis tidak muncul di kategori lain.</p>
 
                 <div class="student-grid" id="studentGrid">
-                    <!-- KONSISTEN MUNCUL -->
+                    <!-- Komentar -->
+                    <div class="category-panel" style="border-color: rgba(139, 92, 246, 0.4); background: rgba(139, 92, 246, 0.06); display: flex; flex-direction: column;">
+                        <div class="category-header" style="color: var(--accent-hover); border-bottom: 1px solid rgba(139, 92, 246, 0.15); padding: 14px 16px;">
+                            <span>📝 Catatan Guru</span>
+                        </div>
+                        <div style="padding: 16px; flex: 1; display: flex; flex-direction: column; gap: 16px;">
+                            <!-- Radio Buttons -->
+                            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                                <div class="catatan-card" data-catatan="Catatan positif" onclick="selectCatatan(this)">
+                                    <div style="font-size: 1.3rem; margin-bottom: 6px;">🌟</div>
+                                    <div class="catatan-title">Catatan Positif</div>
+                                </div>
+                                <div class="catatan-card" data-catatan="Catatan perlu perhatian" onclick="selectCatatan(this)">
+                                    <div style="font-size: 1.3rem; margin-bottom: 6px;">⚠️</div>
+                                    <div class="catatan-title">Perlu Perhatian</div>
+                                </div>
+                            </div>
+                            <!-- Textarea -->
+                            <div style="flex: 1; display: flex; flex-direction: column;">
+                                <textarea id="comment" class="komentar-textarea" oninput="validateStep4()" placeholder="Tulis observasi detail Anda mengenai siswa/kelas ini..." style="width: 100%; flex: 1; min-height: 130px; padding: 14px; background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius-xs); color: var(--text-primary); font-family: inherit; font-size: 0.85rem; resize: vertical; outline: none; transition: var(--transition);"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pilih Siswa -->
                     <div class="category-panel cat-konsisten">
                         <div class="category-header">
                             <span>✅ Konsisten Muncul</span>
@@ -1389,59 +1458,11 @@
                         </div>
                         <div class="student-list" id="listKonsisten"></div>
                     </div>
-
-                    <!-- SERING MUNCUL -->
-                    <div class="category-panel cat-sering">
-                        <div class="category-header">
-                            <span>🔵 Sering Muncul</span>
-                            <span class="category-badge" id="badgeSering">0</span>
-                            <div class="category-actions">
-                                <button class="cat-action-btn" onclick="selectAllStudents('sering')">Pilih Semua</button>
-                                <button class="cat-action-btn" onclick="clearStudents('sering')">Hapus</button>
-                            </div>
-                        </div>
-                        <div class="category-search">
-                            <input type="text" placeholder="Cari siswa..." oninput="filterStudents('sering', this.value)">
-                        </div>
-                        <div class="student-list" id="listSering"></div>
-                    </div>
-
-                    <!-- KADANG MUNCUL -->
-                    <div class="category-panel cat-kadang">
-                        <div class="category-header">
-                            <span>🟡 Kadang Muncul</span>
-                            <span class="category-badge" id="badgeKadang">0</span>
-                            <div class="category-actions">
-                                <button class="cat-action-btn" onclick="selectAllStudents('kadang')">Pilih Semua</button>
-                                <button class="cat-action-btn" onclick="clearStudents('kadang')">Hapus</button>
-                            </div>
-                        </div>
-                        <div class="category-search">
-                            <input type="text" placeholder="Cari siswa..." oninput="filterStudents('kadang', this.value)">
-                        </div>
-                        <div class="student-list" id="listKadang"></div>
-                    </div>
-
-                    <!-- BELUM MUNCUL -->
-                    <div class="category-panel cat-belum">
-                        <div class="category-header">
-                            <span>🔴 Belum Muncul</span>
-                            <span class="category-badge" id="badgeBelum">0</span>
-                            <div class="category-actions">
-                                <button class="cat-action-btn" onclick="selectAllStudents('belum')">Pilih Semua</button>
-                                <button class="cat-action-btn" onclick="clearStudents('belum')">Hapus</button>
-                            </div>
-                        </div>
-                        <div class="category-search">
-                            <input type="text" placeholder="Cari siswa..." oninput="filterStudents('belum', this.value)">
-                        </div>
-                        <div class="student-list" id="listBelum"></div>
-                    </div>
                 </div>
 
                 <div class="btn-row">
                     <button class="btn btn-secondary" onclick="goToStep(3)">← Kembali</button>
-                    <button class="btn btn-primary" id="btnStep4Next" onclick="goToStep(5)">
+                    <button class="btn btn-primary" id="btnStep4Next" disabled onclick="goToStep(5)">
                         Lanjut →
                     </button>
                 </div>
@@ -1552,6 +1573,7 @@
             kodeKelas: null,
             namaKelas: null,
             bulan: null,
+            jenis_catatan: null,
             allStudents: [],
             siswa: {
                 konsisten: [],
@@ -1756,7 +1778,7 @@
         }
 
         function renderAllStudentLists() {
-            ['konsisten', 'sering', 'kadang', 'belum'].forEach(cat => renderStudentList(cat));
+            ['konsisten'].forEach(cat => renderStudentList(cat));
         }
 
         function selectAllStudents(category) {
@@ -1800,6 +1822,10 @@
                 if (state.currentStep === 1 && !state.guru) return;
                 if (state.currentStep === 2 && !state.kodeKelas) return;
                 if (state.currentStep === 3 && !state.bulan) return;
+                if (state.currentStep === 4) {
+                    const comment = document.getElementById('comment').value.trim();
+                    if (!comment || !state.jenis_catatan) return;
+                }
             }
 
             // Don't allow navigation during submission
@@ -1878,16 +1904,16 @@
             const btnProduction = document.getElementById('btnProduction');
             const btnSubmit = document.getElementById('btnSubmit');
 
-            // btnDebug.classList.remove('active-debug');
-            // btnProduction.classList.remove('active-prod');
+            btnDebug.classList.remove('active-debug');
+            btnProduction.classList.remove('active-prod');
 
-            // if (state.mode === 'debug') {
-            //     btnDebug.classList.add('active-debug');
-            //     btnSubmit.innerHTML = '🔍 Preview Data (Debug)';
-            // } else {
-            //     btnProduction.classList.add('active-prod');
-            //     btnSubmit.innerHTML = '🚀 Kirim Penilaian';
-            // }
+            if (state.mode === 'debug') {
+                btnDebug.classList.add('active-debug');
+                btnSubmit.innerHTML = '🔍 Preview Data (Debug)';
+            } else {
+                btnProduction.classList.add('active-prod');
+                btnSubmit.innerHTML = '🚀 Kirim Penilaian';
+            }
         }
 
         /* ═══════════════════════════════════════════════════════════════
@@ -1919,12 +1945,11 @@
                     guru: state.guru,
                     kode_kelas: state.kodeKelas,
                     bulan: state.bulan,
+                    komentar: document.getElementById('comment').value.trim(),
+                    jenis_catatan: state.jenis_catatan || 'Catatan positif',
                     debug: isDebug,
                     siswa: {
                         konsisten: state.siswa.konsisten,
-                        sering: state.siswa.sering,
-                        kadang: state.siswa.kadang,
-                        belum: state.siswa.belum,
                     },
                 };
 
@@ -1933,7 +1958,7 @@
                     'Generating payload (debug)...' :
                     'Memproses quiz dan indikator...';
 
-                const res = await fetch('/api/submit', {
+                const res = await fetch('/api/submit-bulanan', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -2079,6 +2104,26 @@
                 toast.style.transition = '0.3s ease';
                 setTimeout(() => toast.remove(), 300);
             }, 4000);
+        }
+        /* ═══════════════════════════════════════════════════════════════
+           STEP 4 VALIDATION
+           ═══════════════════════════════════════════════════════════════ */
+        function selectCatatan(el) {
+            document.querySelectorAll('.catatan-card').forEach(c => c.classList.remove('selected'));
+            el.classList.add('selected');
+            state.jenis_catatan = el.dataset.catatan;
+            validateStep4();
+        }
+
+        function validateStep4() {
+            const comment = document.getElementById('comment').value.trim();
+            const btnStep4Next = document.getElementById('btnStep4Next');
+
+            if (comment.length > 0 && state.jenis_catatan) {
+                btnStep4Next.disabled = false;
+            } else {
+                btnStep4Next.disabled = true;
+            }
         }
     </script>
 </body>

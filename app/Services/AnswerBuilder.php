@@ -65,6 +65,47 @@ class AnswerBuilder
         return $answers;
     }
 
+    public function buildAnswersBulanan(
+        array  $questions,
+        string $bulan,
+        string $komentar,
+        string $jenisCatatan,
+        string  $siswa,
+        string $guru,
+    ): array {
+        $answers = [];
+
+        foreach ($questions as $question) {
+            $quizType = $question['quizType'] ?? '';
+            $title    = $question['title'] ?? '';
+            $rowId    = $question['rowId'] ?? '';
+
+            // Skip sections and sub_questions
+            if (in_array($quizType, ['section', 'sub_question'], true)) {
+                continue;
+            }
+
+            $answered = $this->resolveAnswerBulanan(
+                $quizType,
+                $title,
+                $bulan,
+                $komentar,
+                $jenisCatatan,
+                $siswa,
+                $guru,
+            );
+
+            if ($answered !== null) {
+                $answers[] = [
+                    'id'       => $rowId,
+                    'answered' => $answered,
+                ];
+            }
+        }
+
+        return $answers;
+    }
+
     /**
      * Determine the answer for a single question based on its type and title.
      */
@@ -109,6 +150,50 @@ class AnswerBuilder
         // ─── Siswa BELUM MUNCUL ──────────────────────────────────
         if ($quizType === 'data_source_multiple_no_option' && str_contains($title, 'BELUM MUNCUL')) {
             return $this->formatStudentAnswer($siswaBelum);
+        }
+
+        // ─── Nama guru / observer ────────────────────────────────
+        if ($quizType === 'data_source' && str_contains($titleLower, 'nama lengkap')) {
+            return $guru;
+        }
+
+        // ─── Konfirmasi persetujuan ──────────────────────────────
+        if ($quizType === 'single_choice' && str_contains($titleLower, 'dengan ini saya')) {
+            return 'Ya, saya menyetujui pernyataan ini';
+        }
+
+        return null;
+    }
+
+    protected function resolveAnswerBulanan(
+        string $quizType,
+        string $title,
+        string $bulan,
+        string $komentar,
+        string $jenisCatatan,
+        string $siswa,
+        string $guru,
+    ): ?string {
+        $titleLower = mb_strtolower($title);
+
+        // ─── Siswa ──────────────────────────────
+        if ($quizType === 'data_source' && str_contains($title, 'nama siswa')) {
+            return $siswa;
+        }
+
+        // ─── Bulan penilaian ──────────────────────────────────────
+        if ($quizType === 'single_choice' && str_contains($titleLower, 'bulan penilaian')) {
+            return $bulan;
+        }
+
+        // ─── Masukan jenis catatan ─────────────────────────────────────
+        if ($quizType === 'free_text' && str_contains($titleLower, 'Masukkan catatan')) {
+            return $komentar;
+        }
+
+        // ─── Pilih jenis catatan ─────────────────────────────────────
+        if ($quizType === 'multiple_choice' && str_contains($titleLower, 'Jenis catatan')) {
+            return $jenisCatatan;
         }
 
         // ─── Nama guru / observer ────────────────────────────────
