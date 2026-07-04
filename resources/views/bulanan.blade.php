@@ -1446,7 +1446,7 @@
                     <!-- Pilih Siswa -->
                     <div class="category-panel cat-konsisten">
                         <div class="category-header">
-                            <span>✅ Konsisten Muncul</span>
+                            <span>Pilih siswa yang akan dinilai</span>
                             <span class="category-badge" id="badgeKonsisten">0</span>
                             <div class="category-actions">
                                 <button class="cat-action-btn" onclick="selectAllStudents('konsisten')">Pilih Semua</button>
