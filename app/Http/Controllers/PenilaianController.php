@@ -403,33 +403,6 @@ class PenilaianController extends Controller
                 continue;
             }
 
-            // Extract indicator data source
-            $indicators = [];
-            foreach ($questions as $q) {
-                if (($q['quizType'] ?? '') === 'data_source'
-                    && str_contains(mb_strtolower($q['title'] ?? ''), 'indikator')
-                ) {
-                    $detail = json_decode($q['detail'] ?? '{}', true);
-                    if (isset($detail['options']) && is_string($detail['options'])) {
-                        $slug       = str_replace('.json', '', $detail['options']);
-                        $indicators = $this->api->getDataSource($slug);
-                    }
-                    break;
-                }
-            }
-
-            if (empty($indicators)) {
-                $results[] = [
-                    'quiz'      => $quizTitle,
-                    'indicator' => '-',
-                    'status'    => 'failed',
-                    'message'   => 'Tidak ada indikator ditemukan',
-                ];
-                $total++;
-                $failed++;
-                continue;
-            }
-
             // Loop each siswa → build payload → submit (or collect in debug)
             foreach ($kumpulan_siswa as $siswa) {
                 $total++;
