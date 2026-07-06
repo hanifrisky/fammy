@@ -1897,17 +1897,6 @@
             const btnDebug = document.getElementById('btnDebug');
             const btnProduction = document.getElementById('btnProduction');
             const btnSubmit = document.getElementById('btnSubmit');
-
-            btnDebug.classList.remove('active-debug');
-            btnProduction.classList.remove('active-prod');
-
-            if (state.mode === 'debug') {
-                btnDebug.classList.add('active-debug');
-                btnSubmit.innerHTML = '🔍 Preview Data (Debug)';
-            } else {
-                btnProduction.classList.add('active-prod');
-                btnSubmit.innerHTML = '🚀 Kirim Penilaian';
-            }
         }
 
         /* ═══════════════════════════════════════════════════════════════

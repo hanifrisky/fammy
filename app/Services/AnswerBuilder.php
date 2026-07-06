@@ -177,32 +177,32 @@ class AnswerBuilder
         $titleLower = mb_strtolower($title);
 
         // ─── Siswa ──────────────────────────────
-        if ($quizType === 'data_source' && str_contains($title, 'nama siswa')) {
+        if (str_contains($title, 'nama siswa')) {
             return $siswa;
         }
 
         // ─── Bulan penilaian ──────────────────────────────────────
-        if ($quizType === 'single_choice' && str_contains($titleLower, 'bulan penilaian')) {
+        if (str_contains($titleLower, 'bulan')) {
             return $bulan;
         }
 
         // ─── Masukan jenis catatan ─────────────────────────────────────
-        if ($quizType === 'free_text' && str_contains($titleLower, 'Masukkan catatan')) {
+        if (str_contains($titleLower, 'masukkan catatan')) {
             return $komentar;
         }
 
         // ─── Pilih jenis catatan ─────────────────────────────────────
-        if ($quizType === 'multiple_choice' && str_contains($titleLower, 'Jenis catatan')) {
+        if (str_contains($titleLower, 'jenis catatan')) {
             return $jenisCatatan;
         }
 
         // ─── Nama guru / observer ────────────────────────────────
-        if ($quizType === 'data_source' && str_contains($titleLower, 'nama lengkap')) {
+        if (str_contains($titleLower, 'nama lengkap')) {
             return $guru;
         }
 
         // ─── Konfirmasi persetujuan ──────────────────────────────
-        if ($quizType === 'single_choice' && str_contains($titleLower, 'dengan ini saya')) {
+        if (str_contains($titleLower, 'dengan ini saya')) {
             return 'Ya, saya menyetujui pernyataan ini';
         }
 
