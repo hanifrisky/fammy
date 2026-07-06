@@ -1495,22 +1495,15 @@
                 </div>
 
                 <div class="summary-students" id="summaryStudents">
+                    <div class="summary-cat sc-sering">
+                        <div class="summary-cat-title">Catatan Bulanan<span class="summary-cat-count" id="sumJenis">0</span></div>
+                        <div class="summary-cat-list" id="sumKomentar">-</div>
+                    </div>
                     <div class="summary-cat sc-konsisten">
-                        <div class="summary-cat-title">✅ Konsisten Muncul <span class="summary-cat-count" id="sumCountKonsisten">0</span></div>
+                        <div class="summary-cat-title">Siswa Terpilih<span class="summary-cat-count" id="sumCountKonsisten">0</span></div>
                         <div class="summary-cat-list" id="sumListKonsisten">-</div>
                     </div>
-                    <div class="summary-cat sc-sering">
-                        <div class="summary-cat-title">🔵 Sering Muncul <span class="summary-cat-count" id="sumCountSering">0</span></div>
-                        <div class="summary-cat-list" id="sumListSering">-</div>
-                    </div>
-                    <div class="summary-cat sc-kadang">
-                        <div class="summary-cat-title">🟡 Kadang Muncul <span class="summary-cat-count" id="sumCountKadang">0</span></div>
-                        <div class="summary-cat-list" id="sumListKadang">-</div>
-                    </div>
-                    <div class="summary-cat sc-belum">
-                        <div class="summary-cat-title">🔴 Belum Muncul <span class="summary-cat-count" id="sumCountBelum">0</span></div>
-                        <div class="summary-cat-list" id="sumListBelum">-</div>
-                    </div>
+
                 </div>
 
                 <label class="confirm-check" id="confirmCheck">
@@ -1871,16 +1864,17 @@
             document.getElementById('sumKelas').textContent = state.namaKelas || '-';
             document.getElementById('sumBulan').textContent = state.bulan || '-';
 
-            const totalMapped = state.siswa.konsisten.length + state.siswa.sering.length +
-                state.siswa.kadang.length + state.siswa.belum.length;
+            const totalMapped = state.siswa.konsisten.length;
             document.getElementById('sumTotal').textContent = `${totalMapped} / ${state.allStudents.length} siswa`;
 
-            ['konsisten', 'sering', 'kadang', 'belum'].forEach(cat => {
+            ['konsisten'].forEach(cat => {
                 const list = state.siswa[cat];
                 document.getElementById('sumCount' + capitalize(cat)).textContent = list.length;
                 document.getElementById('sumList' + capitalize(cat)).textContent =
                     list.length > 0 ? list.join(', ') : 'Tidak ada murid dalam kategori ini';
             });
+            document.getElementById('sumJenis').textContent = state.jenis_catatan || '-';
+            document.getElementById('sumKomentar').textContent = state.comment || '-';
 
             // Reset confirm checkbox
             document.getElementById('confirmCheckbox').checked = false;
