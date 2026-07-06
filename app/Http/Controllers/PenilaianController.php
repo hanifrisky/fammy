@@ -420,7 +420,7 @@ class PenilaianController extends Controller
                     // Debug: collect payload without submitting
                     $completed++;
                     $results[] = [
-                        'quiz'      => $quizTitle,
+                        'quiz'      => $quizTitle . ' ' . $siswa,
                         'quizId'    => $quizId,
                         'siswa' => $siswa,
                         'status'    => 'debug',
@@ -434,7 +434,7 @@ class PenilaianController extends Controller
                     if ($result['success']) {
                         $completed++;
                         $results[] = [
-                            'quiz'      => $quizTitle,
+                            'quiz'      => $quizTitle . ' ' . $siswa,
                             'siswa' => $siswa,
                             'payload'  => $answers,
                             'status'    => 'success',
@@ -444,7 +444,7 @@ class PenilaianController extends Controller
                     } else {
                         $failed++;
                         $results[] = [
-                            'quiz'      => $quizTitle,
+                            'quiz'      => $quizTitle . ' ' . $siswa,
                             'siswa' => $siswa,
                             'payload'  => $answers,
                             'status'    => 'failed',
