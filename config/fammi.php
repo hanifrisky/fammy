@@ -94,6 +94,7 @@ return [
     'quiz_filters' => [
         'EMPATI',
         'RESILIENCE',
+        'RESILIENSI',
         'INISIATIF',
         '7 KEBIASAAN',
     ],
