@@ -1496,7 +1496,7 @@
 
                 <div class="summary-students" id="summaryStudents">
                     <div class="summary-cat sc-sering">
-                        <div class="summary-cat-title">Catatan Bulanan<span class="summary-cat-count" id="sumJenis">0</span></div>
+                        <div class="summary-cat-title">Catatan Bulanan: <span class="summary-cat-count" id="sumJenis">0</span></div>
                         <div class="summary-cat-list" id="sumKomentar">-</div>
                     </div>
                     <div class="summary-cat sc-konsisten">
@@ -1874,7 +1874,7 @@
                     list.length > 0 ? list.join(', ') : 'Tidak ada murid dalam kategori ini';
             });
             document.getElementById('sumJenis').textContent = state.jenis_catatan || '-';
-            document.getElementById('sumKomentar').textContent = state.comment || '-';
+            document.getElementById('sumKomentar').textContent = document.getElementById('comment').value.trim() || '-';
 
             // Reset confirm checkbox
             document.getElementById('confirmCheckbox').checked = false;
